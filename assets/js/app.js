@@ -42,6 +42,19 @@ function formatDate(iso) {
   }
 }
 
+function formatDateShort(iso) {
+  if (!iso) return "—";
+  try {
+    return new Intl.DateTimeFormat("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(new Date(iso));
+  } catch {
+    return "—";
+  }
+}
+
 function setText(sel, value) {
   $$(sel).forEach((el) => {
     if (value) el.textContent = value;
@@ -139,7 +152,7 @@ function renderRelease(rel) {
 
   setText("[data-version]", rel.version);
   setText("[data-badge-version]", "Versi " + rel.version + " untuk Android");
-  setText("[data-meta-version]", "Versi " + rel.version);
+  setText("[data-meta-version]", "Diperbarui " + formatDateShort(rel.date));
   setText("[data-size]", size);
   setText("[data-stat-size]", size);
   setText("[data-inline-size]", size);

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ibnuakill.github.io/tenmu_lp/sitemap.xml

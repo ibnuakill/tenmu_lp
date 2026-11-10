@@ -231,6 +231,25 @@ function initReveal() {
     { rootMargin: "0px 0px -8% 0px", threshold: 0.12 }
   );
   items.forEach((el) => io.observe(el));
+
+  // Kalau halaman dibuka langsung lewat #anchor atau di-reload di tengah halaman,
+  // browser melompat sebelum observer sempat mengukur posisi, jadi elemen yang
+  // sudah ada di layar bisa tertinggal transparan. Sapu sekali tiap posisi berubah.
+  const sweep = () => {
+    const limit = window.innerHeight * 0.96;
+    items.forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.top < limit && r.bottom > 0) {
+        el.classList.add("in");
+        io.unobserve(el);
+      }
+    });
+  };
+  window.addEventListener("load", () => setTimeout(sweep, 250));
+  window.addEventListener("hashchange", () => setTimeout(sweep, 200));
+  // Lompatan ke #anchor bisa berjalan halus (smooth) dan baru mendarat setelah
+  // observer tenang, jadi sapu beberapa kali di awal umur halaman.
+  [0, 150, 400, 800, 1400, 2200, 3200].forEach((t) => setTimeout(sweep, t));
 }
 
 function initYear() {
